@@ -1,0 +1,111 @@
+ROS_DOMAIN_ID - to identify each physical system seperately
+ROS_LOCALHOST_ONLY - limits ROS communication to localhost only
+
+Nodes in ROS: Each nodes in ROS should be responsible for a single
+              modular purpose: controlling the wheel motors or publishing
+              the sensor data from a laser range-finder.
+
+              Each nodes can send or receive data from other nodes via:
+              - Topics
+              - Services 
+              - Actions
+              - Parameters
+
+    ros2 node list
+    ros2 node info <node_name>
+
+Topics:
+    Topics are bus for nodes to exchange messages. 
+    A node can publish any number of topics and can 
+    subscribe to any number of topics too.
+
+    rqt_graph
+    ros2 topic list
+    ros2 topic list -t 
+    ros2 topic echo <topic_name> // to know the data being published on a topic
+    ros2 topic info <topic_name>
+    ros2 interface show <msg type> // to know the details of a msg, the structure of data
+    ros2 topic pub <topic_name> <msg_type> '<args>'
+
+
+Services:
+    It is another model of communication in ROS graph. It is based on 
+    call-and-response model vs the publisher-subscriber model of Topics.
+
+    Topics allow nodes to subscribe to data streams and get continuous 
+    data updates, services only provide data when they are specifically 
+    called by a client. (Like Client-Server)
+
+    There can be many service clients using the same service but for a 
+    specific service, there can only be one server.
+
+    ros2 service list
+    ros2 service list --show-types
+    ros2 service type <service name>
+    ros2 service find <type_name> // find all the services with the specified type_name
+    ros2 service call <service name> <service type> '<arguments>'
+
+
+Parameters:
+    A parameter is a configuration value of a node. Like a node settings. 
+    Each parameter consists of a key, a value, and a descriptor.
+
+    ros2 param list
+    ros2 param get <node_name> <parameter_name>
+    ros2 param set <node_name> <parameter_name> <value>
+    ros2 param dump <node_name> > filename.yaml
+    ros2 param load <node_name> <path to parameter_file> 
+    
+    // it is also possible to load
+    // parameters while starting the 
+    // node
+
+
+Actions:
+    It is also one of the communication types in ROS graph, intended for long tasks. 
+    An action consists of 3 parts:
+        - A Goal
+        - Feedback
+        - A result
+
+    Actions are build on Topics and Services. 
+    An 'action client' node sends a goal to an 'action server' node that acknowledges
+    the goal and returns a stream of feedback and a result.
+
+    ros2 action list
+    ros2 action info <action_name>
+    ros2 action send_goal <action_name> <action_type> '<goal argument>'
+
+
+----------------------------------------------------------------------------------------------------
+
+Creating ROS 2 workspace with `colcon`
+-------------------------------------
+
+Project Structure:
+
+my_awesome_ros_project/
+-- build/
+-- install/
+-- log/
+-- src/
+---- new_package/
+-------- <package files>
+
+
+"colcon" to build package.
+colcon build // this command should be run on the project directory, not in the sub-directories
+
+creating a workspace
+    - Sourcing an overlay in the same terminal where you built, or likewise building 
+      where an overlay is sourced, may create complex issues.
+
+creating a package
+    ros2 pkg create
+
+    create package > write code > update dependencies in package.xml >
+    update entry points in setup.py > install dependencies with rosdep > 
+    build the package.
+
+    >>> writing simple service and client
+
